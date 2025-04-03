@@ -173,7 +173,7 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
 
     const uint8_t mods = get_mods();
     const uint8_t shiftMods = (mods & MOD_BIT(KC_RSFT)) | (mods & MOD_BIT(KC_LSFT));
-    const uint8_t ctlMods = (mods & MOD_BIT(KC_RCTL)) | (mods & MOD_BIT(KC_LCTL));
+    const uint8_t cmdMods = (mods & MOD_BIT(KC_LGUI)) | (mods & MOD_BIT(KC_RGUI));
 
     if (encoderPressed) {
         if (clockwise && ++encoderMode > CONFIRM) {
@@ -227,14 +227,14 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
         }
         register_mods(shiftMods);
     }
-    else if (ctlMods) {
-        unregister_mods(ctlMods);
+    else if (cmdMods) {
+        unregister_mods(cmdMods);
         if (clockwise) {
             tap_code(KC_WH_U);
         } else {
             tap_code(KC_WH_D);
         }
-        register_mods(ctlMods);
+        register_mods(cmdMods);
     }
     else {
         if (clockwise) {
