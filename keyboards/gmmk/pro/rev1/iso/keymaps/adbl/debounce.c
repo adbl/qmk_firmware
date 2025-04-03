@@ -5,11 +5,20 @@ static uint16_t key_timer[MATRIX_ROWS][MATRIX_COLS];
 #define SPACE_DEBOUNCE_TIME 10  // ms
 #define DEFAULT_DEBOUNCE_TIME 5  // ms
 
-bool debounce_scan(matrix_row_t raw[], matrix_row_t cooked[], bool changed[]) {
+void debounce_init(uint8_t num_rows) {
+    // Initialize all timers to 0
+    for (uint8_t row = 0; row < num_rows; row++) {
+        for (uint8_t col = 0; col < MATRIX_COLS; col++) {
+            key_timer[row][col] = 0;
+        }
+    }
+}
+
+bool debounce(matrix_row_t raw[], matrix_row_t cooked[], bool changed[], uint8_t num_rows) {
     bool did_change = false;
     uint16_t now = timer_read();
 
-    for (uint8_t row = 0; row < MATRIX_ROWS; row++) {
+    for (uint8_t row = 0; row < num_rows; row++) {
         matrix_row_t row_raw = raw[row];
         matrix_row_t row_cooked = cooked[row];
         matrix_row_t row_changed = 0;
@@ -22,7 +31,7 @@ bool debounce_scan(matrix_row_t raw[], matrix_row_t cooked[], bool changed[]) {
                 uint16_t debounce_time = DEFAULT_DEBOUNCE_TIME;
 
                 // Check if this key is spacebar
-                if (keymap_key_to_keycode((keypos_t){ row, col }) == KC_SPC) {
+                if (keymap_key_to_keycode(0, (keypos_t){ row, col }) == KC_SPC) {
                     debounce_time = SPACE_DEBOUNCE_TIME;
                 }
 

@@ -34,9 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "rgb_matrix_map.h"
 
 enum custom_keycodes { 
-    KC_MISSION_CONTROL = SAFE_RANGE,
-    KC_LAUNCHPAD,
-    KC_ENCODER,
+    KC_ENCODER = SAFE_RANGE,
 };
 #define KC_MCTL KC_MISSION_CONTROL
 #define KC_LPAD KC_LAUNCHPAD
@@ -310,7 +308,7 @@ uint8_t top_tint_value(const HSV color) {
 
 #define ARRAYSIZE(arr) sizeof(arr) / sizeof(arr[0])
 #ifdef RGB_MATRIX_ENABLE
-void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
+bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     HSV keysColor = rgb_matrix_get_hsv();
     HSV sidesColor = sides;
 
@@ -364,6 +362,7 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     for (uint8_t i=0; i<ARRAYSIZE(LED_SIDE_LEFT); i++) {
         rgb_matrix_set_color(LED_SIDE_LEFT[i], sidesRGB.r, sidesRGB.g, sidesRGB.b);
     }
+    return true;
 }
 #endif
 
