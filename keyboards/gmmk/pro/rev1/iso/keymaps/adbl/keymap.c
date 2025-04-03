@@ -112,10 +112,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             encoderPressed = record->event.pressed;
             if (!encoderPressed) {
                 HSV *resetColor = NULL;
-                if (resetStatus == PRELIMINARY) {
+                if (resetStatus == PRELIMINARY) { 
+                    #ifdef RGB_MATRIX_ENABLE
                     HSV keysColor = rgb_matrix_get_hsv();
                     resetColor = &keysColor;
                     dprintf("reset %d\n", encoderMode);
+                    #endif
                 }
 
                 switch(encoderMode) {
@@ -187,6 +189,7 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
             ? AVAILABLE : NONE;
     }
     else if (encoderMode < CONFIRM) {
+        #ifdef RGB_MATRIX_ENABLE
         bool settingKeys = encoderMode < SIDES_RGB_BRIGHTNESS;
 
         HSV *current;
@@ -217,6 +220,7 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
         if (settingKeys) {
             rgb_matrix_sethsv(current->h, current->s, current->v);
         }
+        #endif
     }
     else if (shiftMods) {
         unregister_mods(shiftMods);
@@ -248,6 +252,8 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
 }
 #endif
 
+#define ARRAYSIZE(arr) sizeof(arr) / sizeof(arr[0])
+#ifdef RGB_MATRIX_ENABLE
 const uint8_t NUMBER_LEDS[] = {LED_1, LED_2, LED_3, LED_4, LED_5, LED_6, LED_7, LED_8};
 
 uint8_t value_indication = 0xFF;
@@ -306,8 +312,6 @@ uint8_t top_tint_value(const HSV color) {
     return 0;
 }
 
-#define ARRAYSIZE(arr) sizeof(arr) / sizeof(arr[0])
-#ifdef RGB_MATRIX_ENABLE
 bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     HSV keysColor = rgb_matrix_get_hsv();
     HSV sidesColor = sides;
